@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Iqreate Alpha</string>
+
+    <string name="logoname">IQREATE</string>
+    <string name="logotagline">growing great ideas</string>
+
+    <string name="home_btn">Home</string>
+    <string name="Upload_btn">Upload</string>
+    <string name="Profile_btn">Profile</string>
+
+
+    <string name="home_text">Welcome to Iqreate</string>
+    <string name="profile_text">profile page</string>
+
+    <string name="upload">Upload</string>
+    <string name="drag">drag</string>
+    <string name="takePhoto">Camera</string>
+    <string name="cameraicon">opencamera</string>
+    <string name="galleryicon">opengallery</string>
+    <string name="gallery">Gallery</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

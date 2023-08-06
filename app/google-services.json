@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "653635700881",
+    "project_id": "iqreate-alpha",
+    "storage_bucket": "iqreate-alpha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653635700881:android:400572b347684863209730",
+        "android_client_info": {
+          "package_name": "com.example.iqreatealpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653635700881-k1i6vkf2qpik1ah5iq9eh9le258r3osb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1kEK-0QQokTkJkoY6g-a7kH2od78GIxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653635700881-k1i6vkf2qpik1ah5iq9eh9le258r3osb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
