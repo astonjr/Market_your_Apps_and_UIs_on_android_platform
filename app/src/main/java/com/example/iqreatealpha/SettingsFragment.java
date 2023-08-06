@@ -93,25 +93,42 @@ public class SettingsFragment extends Fragment {
         shareProfileButton.setOnClickListener(v -> {
             // Get the current user's data
             if (currentUser != null) {
-                String username = currentUser.getDisplayName();
-                String email = currentUser.getEmail();
-                String profession = "Sample Profession"; // Replace with the actual profession field from Firestore
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String userId = currentUser.getUid();
 
-                // Create the share message
-                String shareMessage = "Check out my profile:\n\n"
-                        + "Username: " + username + "\n"
-                        + "Email: " + email + "\n"
-                        + "Profession: " + profession + "\n\n"
-                        + "Join me on WeezCorp!";
+                // Get the user document from the "Users" collection based on the current user's ID
+                db.collection("Users").document(userId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            String username = currentUser.getDisplayName();
+                            String email = currentUser.getEmail();
+                            String profession = document.getString("userProfession");
 
-                // Create an intent to share the message
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My Profile");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                            // Create the share message
+                            String shareMessage = "Check out my profile:\n\n"
+                                    + "Username: " + username + "\n"
+                                    + "Email: " + email + "\n"
+                                    + "Profession: " + profession + "\n\n"
+                                    + "Join me on WeezCorp!";
 
-                // Start the share activity
-                startActivity(Intent.createChooser(shareIntent, "Share Profile"));
+                            // Create an intent to share the message
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My Profile");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+
+                            // Start the share activity
+                            startActivity(Intent.createChooser(shareIntent, "Share Profile"));
+                        } else {
+                            // Document doesn't exist, handle accordingly
+                            Toast.makeText(requireContext(), "User data not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Handle the error if the Firestore query fails
+                        Toast.makeText(requireContext(), "Error fetching user data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -119,6 +136,7 @@ public class SettingsFragment extends Fragment {
             // Open ReportViewActivity
             startActivity(new Intent(requireContext(), ReportViewActivity.class));
         });
+
 
         return view;
     }

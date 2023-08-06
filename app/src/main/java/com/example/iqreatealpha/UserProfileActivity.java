@@ -119,11 +119,11 @@ public class UserProfileActivity extends AppCompatActivity {
             String profession = profileProfession.getText().toString();
 
             // Create the share message
-            String shareMessage = "Check out my profile on WeezCorp:\n\n"
+            String shareMessage = "Check out this profile on WeezCorp:\n\n"
                     + "Username: " + username + "\n"
                     + "Email: " + email + "\n"
                     + "Profession: " + profession + "\n\n"
-                    + "Join me on WeezCorp!";
+                    + "Join WeezCorp to view this profile!";
 
             // Create an intent to share the message
             Intent shareIntent = new Intent(Intent.ACTION_SEND);

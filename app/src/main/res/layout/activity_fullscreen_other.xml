@@ -17,11 +17,59 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/project_edits1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/project_edits">
+
+        <TextView
+            android:id="@+id/project_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:text="description"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/averageRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:textStyle="normal"
+            android:layout_marginEnd="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_star_filled"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="star"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/project_edits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:background="@color/light_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -33,11 +81,10 @@
             <Button
                 android:id="@+id/project_share"
                 android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_cardview"
+                android:layout_height="match_parent"
                 android:backgroundTint="@color/white"
                 android:text="Share"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#2B5113"
                 android:textSize="20sp"
@@ -47,11 +94,10 @@
             <Button
                 android:id="@+id/project_view"
                 android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_cardview"
+                android:layout_height="match_parent"
                 android:backgroundTint="@color/white"
                 android:text="web view"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginBottom="10dp"
                 android:textSize="20sp"
                 android:textColor="#2B5113"

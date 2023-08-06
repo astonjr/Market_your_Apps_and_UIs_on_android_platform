@@ -9,9 +9,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Locale;
 
 public class FullScreenOtherActivity extends AppCompatActivity {
 
@@ -19,6 +27,10 @@ public class FullScreenOtherActivity extends AppCompatActivity {
     private String imageUrl;
     private String imageLink;
     private FirebaseFirestore firestore;
+    private TextView averageRatingTextView;
+    private TextView projectDescriptionTextView;
+    private LinearLayout projectEditsLayout;
+    private LinearLayout projectEdits1Layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +51,14 @@ public class FullScreenOtherActivity extends AppCompatActivity {
                 .load(imageUrl)
                 .into(imageView);
 
+        // Find the TextView for averageRating and projectDescription
+        averageRatingTextView = findViewById(R.id.averageRating);
+        projectDescriptionTextView = findViewById(R.id.project_description);
+
+        // Find the layouts for project_edits and project_edits1
+        projectEditsLayout = findViewById(R.id.project_edits);
+        projectEdits1Layout = findViewById(R.id.project_edits1);
+
         // Set up the share button
         Button shareButton = findViewById(R.id.project_share);
         shareButton.setOnClickListener(v -> shareImage());
@@ -47,43 +67,74 @@ public class FullScreenOtherActivity extends AppCompatActivity {
         Button projectViewButton = findViewById(R.id.project_view);
         projectViewButton.setOnClickListener(v -> openProjectView());
 
-        // Set click listener for the ImageView
-        imageView.setOnClickListener(v -> toggleButtonsVisibility(shareButton, projectViewButton));
+        // Fetch the updated average rating and project description from Firestore and update the TextViews
+        fetchAndUpdateAverageRatingAndDescription();
+
+        // Set click listener for the ImageView to hide the project_edits and project_edits1 layouts
+        imageView.setOnClickListener(v -> toggleLayoutsVisibility(projectEditsLayout, projectEdits1Layout));
     }
 
-    private boolean buttonsVisible = true;
+    private void fetchAndUpdateAverageRatingAndDescription() {
+        // Retrieve the document reference based on the image URL
+        Query query = firestore.collection("Images").whereEqualTo("imageUrl", imageUrl);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    // Get the document reference of the image
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    // Get the average rating value and project description from the document
+                    double averageRating = document.getDouble("averageRating");
+                    String description = document.getString("imageDescription");
 
-    private void toggleButtonsVisibility(View... buttons) {
-        if (buttonsVisible) {
-            // Buttons are visible, animate them to drop down
-            for (View button : buttons) {
-                button.animate()
-                        .translationY(button.getHeight()) // Move the button down by its height
-                        .alpha(0f) // Fade out the button
+                    // Update the averageRatingTextView and projectDescriptionTextView with the new values
+                    averageRatingTextView.setText(String.format(Locale.getDefault(), "%.1f", averageRating));
+                    projectDescriptionTextView.setText(description);
+                } else {
+                    // Image not found or data not available
+                    Toast.makeText(FullScreenOtherActivity.this, "Image not found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Error occurred while querying the image
+                Toast.makeText(FullScreenOtherActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean layoutsVisible = true;
+
+    private void toggleLayoutsVisibility(View... layouts) {
+        if (layoutsVisible) {
+            // Layouts are visible, animate them to drop down
+            for (View layout : layouts) {
+                layout.animate()
+                        .translationY(layout.getHeight()) // Move the layout down by its height
+                        .alpha(0f) // Fade out the layout
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                // Set the buttons as invisible after animation
-                                button.setVisibility(View.INVISIBLE);
+                                // Set the layout as invisible after animation
+                                layout.setVisibility(View.INVISIBLE);
                             }
                         });
             }
         } else {
-            // Buttons are not visible, animate them to reappear
-            for (View button : buttons) {
-                button.setVisibility(View.VISIBLE); // Make the button visible before animating
-                button.setAlpha(0f); // Set initial alpha to 0 (fully transparent)
-                button.setTranslationY(button.getHeight()); // Move the button down by its height
+            // Layouts are not visible, animate them to reappear
+            for (View layout : layouts) {
+                layout.setVisibility(View.VISIBLE); // Make the layout visible before animating
+                layout.setAlpha(0f); // Set initial alpha to 0 (fully transparent)
+                layout.setTranslationY(layout.getHeight()); // Move the layout down by its height
 
-                button.animate()
-                        .translationY(0f) // Move the button back to its original position
-                        .alpha(1f) // Fade in the button
+                layout.animate()
+                        .translationY(0f) // Move the layout back to its original position
+                        .alpha(1f) // Fade in the layout
                         .setListener(null); // Remove the listener to prevent conflicts
             }
         }
 
-        buttonsVisible = !buttonsVisible;
+        layoutsVisible = !layoutsVisible;
     }
+
 
     private void shareImage() {
         // Create the share message

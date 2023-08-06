@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -35,6 +36,7 @@ public class ProfileFragment extends Fragment {
     private ListenerRegistration userListener;
     private StorageReference storageReference;
     private ProfileAdapter profileAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private BottomNavigationView bottomNavigationView;
 
     public ProfileFragment() {
@@ -59,6 +61,10 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+
+        // Initialize the SwipeRefreshLayout
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::loadProfileImages);
 
         // Set up the user data listener
         if (currentUser != null) {
@@ -186,16 +192,22 @@ public class ProfileFragment extends Fragment {
                         // Set the retrieved images in the ProfileAdapter
                         profileAdapter.setImages(images);
 
-                        // Set the number of projects uploaded
+                        // Update the number of projects uploaded
                         TextView numberOfProjectsUploaded = getView().findViewById(R.id.number_of_projects_uploaded);
                         numberOfProjectsUploaded.setText(String.valueOf(profileAdapter.getCount()));
+
+                        // Stop the SwipeRefreshLayout refreshing animation
+                        swipeRefreshLayout.setRefreshing(false);
                     })
                     .addOnFailureListener(e -> {
                         // Handle any errors
                         Toast.makeText(requireContext(), "Failed to load profile images.", Toast.LENGTH_SHORT).show();
+                        // Stop the SwipeRefreshLayout refreshing animation on failure
+                        swipeRefreshLayout.setRefreshing(false);
                     });
         }
     }
+
 
     @Override
     public void onDestroyView() {

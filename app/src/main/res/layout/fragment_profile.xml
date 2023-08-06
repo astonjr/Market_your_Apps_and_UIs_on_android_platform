@@ -110,24 +110,30 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
         </LinearLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
         <GridView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:paddingTop="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="match_parent"
             android:columnWidth="150dp"
             android:horizontalSpacing="10dp"
             android:verticalSpacing="30dp"
             android:numColumns="3"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
-
+            />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -24,6 +24,8 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -174,10 +176,48 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         }
 
         private void openRatingDialog(String imageId) {
-            RatingDialog ratingDialog = new RatingDialog();
-            ratingDialog.setImageId(imageId); // Set the imageId using the setter method
-            ratingDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "rating_dialog");
+            // Get the reference to the Firestore collection "ImageRatings"
+            CollectionReference imageRatingsRef = FirebaseFirestore.getInstance().collection("ImageRatings");
+
+            // Get the current user ID from Firebase Authentication
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = auth.getCurrentUser();
+
+            if (currentUser != null) {
+                String currentUserId = currentUser.getUid();
+
+                // Check if the current user's ID exists in the userIds array of the selected image
+                imageRatingsRef.document(imageId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            List<String> userIds = (List<String>) document.get("userIds");
+                            if (userIds != null && userIds.contains(currentUserId)) {
+                                // User has already rated the image, show the toast
+                                Toast.makeText(context, "You have already rated this project.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // User has not rated the image yet, open the rating dialog
+                                RatingDialog ratingDialog = new RatingDialog();
+                                ratingDialog.setImageId(imageId); // Set the imageId using the setter method
+                                ratingDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "rating_dialog");
+                            }
+                        } else {
+                            // Document doesn't exist, open the rating dialog for the new image
+                            RatingDialog ratingDialog = new RatingDialog();
+                            ratingDialog.setImageId(imageId); // Set the imageId using the setter method
+                            ratingDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "rating_dialog");
+                        }
+                    } else {
+                        // Handle the error if the Firestore query fails
+                        Toast.makeText(context, "Error fetching image ratings.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // User is not authenticated, show a toast message
+                Toast.makeText(context, "Please log in first to rate.", Toast.LENGTH_SHORT).show();
+            }
         }
+
 
 
         public void bindAverageRating(float averageRating) {

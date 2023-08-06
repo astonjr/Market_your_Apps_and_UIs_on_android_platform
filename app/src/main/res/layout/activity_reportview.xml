@@ -18,10 +18,20 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/numberOfReports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="37sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System Reports"
+            android:text=" User Reports"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="37sp"

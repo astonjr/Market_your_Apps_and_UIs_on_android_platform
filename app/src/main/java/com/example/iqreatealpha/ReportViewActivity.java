@@ -1,6 +1,7 @@
 package com.example.iqreatealpha;
 
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,9 @@ public class ReportViewActivity extends AppCompatActivity {
         // Fetch the data from Firestore and update the pdfItemList
         fetchReportsFromFirestore();
 
+        // Set the number of reports in the TextView
+        setNumberOfReports();
+
         pdfAdapter.notifyDataSetChanged();
     }
 
@@ -58,10 +62,17 @@ public class ReportViewActivity extends AppCompatActivity {
                         }
                     }
                     pdfAdapter.notifyDataSetChanged();
+                    // Set the number of reports in the TextView
+                    setNumberOfReports();
                 }
             } else {
                 Toast.makeText(ReportViewActivity.this, "Failed to fetch reports from Firestore", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setNumberOfReports() {
+        TextView numberOfReports = findViewById(R.id.numberOfReports);
+        numberOfReports.setText(String.valueOf(pdfItemList.size()));
     }
 }
