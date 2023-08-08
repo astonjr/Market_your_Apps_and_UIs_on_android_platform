@@ -119,7 +119,7 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/round_corner"
                         android:backgroundTint="@color/white"
-                        android:text="contact support"
+                        android:text="support email"
                         android:textAllCaps="true"
                         android:textColor="#F44336"
                         android:textSize="20sp"
