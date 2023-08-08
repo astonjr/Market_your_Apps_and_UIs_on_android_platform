@@ -35,7 +35,8 @@ public class SettingsFragment extends Fragment {
     private Button logoutButton;
     private Button deleteAccountButton;
     private Button shareProfileButton;
-    private Button systemReportButton; // Declare systemReportButton
+    private Button systemReportButton;
+    private Button supportButton;
     private FirebaseAuth firebaseAuth;
 
     public SettingsFragment() {
@@ -58,18 +59,38 @@ public class SettingsFragment extends Fragment {
         editAccountButton = view.findViewById(R.id.edit_account_button);
         logoutButton = view.findViewById(R.id.logout_button);
         deleteAccountButton = view.findViewById(R.id.delete_account_button);
-        shareProfileButton = view.findViewById(R.id.account_share_button); // Initialize shareProfileButton
-        systemReportButton = view.findViewById(R.id.system_report); // Initialize systemReportButton
+        shareProfileButton = view.findViewById(R.id.account_share_button);
+        systemReportButton = view.findViewById(R.id.system_report);
+        supportButton = view.findViewById(R.id.support);
 
         // Get the current user
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null && currentUser.getEmail().equals("junioraston23@gmail.com")) {
             // Show the systemReportButton only for the specified user
+            supportButton.setVisibility(View.GONE);
             systemReportButton.setVisibility(View.VISIBLE);
         } else {
             // Hide the systemReportButton for other users
+            supportButton.setVisibility(View.VISIBLE);
             systemReportButton.setVisibility(View.GONE);
         }
+
+        supportButton.setOnClickListener(v -> {
+            // Create an intent to send an email
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:" + "junioraston23@gmail.com"));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback on Weezcorp App");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Enter your feedback here.");
+
+            try {
+                // Attempt to start the email activity
+                startActivity(Intent.createChooser(emailIntent, "Send email"));
+            } catch (Exception e) {
+                // Handle exceptions (e.g., no email client installed)
+                Toast.makeText(requireContext(), "No email app installed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         editAccountButton.setOnClickListener(v -> {
             // Open EditProfileFragment
