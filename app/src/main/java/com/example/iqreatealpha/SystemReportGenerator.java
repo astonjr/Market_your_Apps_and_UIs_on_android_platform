@@ -187,7 +187,7 @@ public class SystemReportGenerator {
                     // Save the system report as a PDF file
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                     String currentDate = dateFormat.format(new Date());
-                    String fileName = email.replace("@", "_") + ".pdf";
+                    String fileName = email.replace("@", "_") +"_" + (currentDate) + ".pdf";
 
                     // Save the system report as a PDF file
                     File reportFile = new File(context.getExternalFilesDir(null), fileName);
